@@ -2,3 +2,27 @@ blueprint:
   name: Hue Dimmer Switch
   description: Configure Hue Dimmer Buttons
   domain: automation
+  input:
+    dimmer_switch:
+      name: Dimmer Switch
+      description: Dimmer Switch to control
+      selector:
+        device:
+          filter:
+            - manufacturer: Phillips
+            - model: RWL020
+          entity:
+            - domain: button
+        multiple: true
+    target_button_on:
+      name: Target for On Button
+    target_button_off:
+      name: Target for Off Button
+    target_button_brighter:
+      name: Target for Brighter Button
+    target_button_dimmer:
+      name: Target for Dimmer Button
+
+trigger:
+
+action:
