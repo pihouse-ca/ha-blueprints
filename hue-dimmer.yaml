@@ -1,0 +1,4 @@
+blueprint:
+  name: Hue Dimmer Switch
+  description: Configure Hue Dimmer Buttons
+  domain: automation
