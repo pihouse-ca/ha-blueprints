@@ -19,16 +19,14 @@ blueprint:
         target:
           entity:
            domain: light
-    light_profile:
-      name: Light Profile
-      description: Light Profile to set
+    brightness_transition_step:
+      name: Transition Step
+      description: How much to adjust brightness by on the dimmers
       selector:
-        select:
-          options:
-            - relax
-            - concentrate
-            - energize
-            - reading
+        number:
+          min: 1
+          max: 20
+          unit_of_measurement: '%'
 
 trigger:
   - platform: event
@@ -36,7 +34,30 @@ trigger:
 
 variables:
   dimmer_switch_devices: !input dimmer_switches
-  dimmer_command: {{ trigger.event.data.command | split('_')[0] }}
+  dimmer_id: {{ trigger.event.data.device_id }}
+  dimmer_button: {{ trigger.event.data.args.button }}
+  dimmer_press_type: {{ trigger.event.data.args.press_type }}
+  dimmer_command: {{ trigger.event.data.command }}
+  action_service: light.turn_{{ 'off' if trigger.event.data.args.button == 'off' else 'on' }}
+  action_transition: {{ 1 if trigger.event.data.args.button in [ 'off', 'on' ] else 0.5 }}
+  action_data_brightness_pct: {{ 100 if trigger.event.data.command == 'on_long_release' else None }}
+  action_data_brightness_step_pct: >
+    {% if trigger.event.data.args.button not in [ 'off', 'on' ] %}
+      !input brightness_transition_step
+    {% else %}
+      {{ None }}
+    {% endif %}
 
 action:
-    
+  - variables:
+      action_data: >
+        {% if action_data_brightness_pct is not None %}
+          {{ { 'brightness_pct': action_data_brightness_pct, 'transition': action_transition } }}
+        {% elif action_data_brightness_step_pct is not None %}
+          {% set tmp_step_pct = -action_data_brightness_step_pct if dimmer_button == 'down' else action_data_brightness_step_pct %}
+          {{ { 'brightness_step_pct': tmp_step_pct, 'transition': action_transition } }}
+        {% endif %}
+  - service: action_service
+    target: !input target_lights
+    data: {{ action_data }}
+      
