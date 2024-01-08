@@ -31,7 +31,12 @@ blueprint:
             - reading
 
 trigger:
-- platform: event
-  event_type: zha_event
+  - platform: event
+    event_type: zha_event
+
+variables:
+  dimmer_switch_devices: !input dimmer_switched
+
+conditions: {{ trigger.event.data.device_id in dimmer_switch_devices }}  
 
 action:
