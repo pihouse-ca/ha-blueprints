@@ -14,7 +14,7 @@ blueprint:
           entity:
             - domain: button
         multiple: true
-    lights:
+    target_lights:
       name: Lights
       description: Lights to control
       selector:
@@ -22,10 +22,83 @@ blueprint:
           entity:
             filter:
               - domain: light
+    light_profile:
+      name: Light Profile
+      description: Light Profile to set
+      selector:
+        select:
+          options:
+            - relax
+            - concentrate
+            - energize
+            - reading
 
 trigger:
-  - platform: event
-    event_type: zha_event
-
+- platform: event
+  event_type: zha_event
+  event_data:
+    command: 'on'
+  id: 'on'
+- platform: event
+  event_type: zha_event
+  event_data:
+    command: off_with_effect
+  id: 'off'
+- platform: event
+  event_type: zha_event
+  id: 'up'
+  event_data:
+    command: step
+    args:
+    - 0
+    - 30
+    - 9
+- platform: event
+  event_type: zha_event
+  id: 'down'
+  event_data:
+    command: step
+    args:
+    - 1
+    - 30
+    - 9
 
 action:
+- choose:
+  - conditions:
+    - condition: trigger
+      id: 'on'
+    sequence:
+    - service: light.turn_on
+      target: !input target_lights
+      data:
+        profile: !input light_profile
+        transition: 1
+  - conditions:
+    - condition: trigger
+      id: 'off'
+    sequence:
+    - service: light.turn_off
+      target: !input target_lights
+      data:
+        transition: 1
+  - conditions:
+    - condition: trigger
+      id: 'down'
+    sequence:
+    - service: light.turn_on
+      target: !input target_lights
+      data:
+        profile: !input light_profile
+        brightness_step_pct: -5
+        transition: 0.5
+  - conditions:
+    - condition: trigger
+      id: 'up'
+    sequence:
+    - service: light.turn_on
+      target: !input target_lights
+      data:
+        profile: !input light_profile
+        brightness_step_pct: 5
+        transition: 0.5
