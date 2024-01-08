@@ -34,11 +34,11 @@ trigger_variables:
   dimmer_devices: !input dimmer_switches
 
 trigger:
-{% for device_id in states(dimmer_devices) %}
+{% for i in states(dimmer_devices) %}
 - platform: event
   event_type: zha_event
   event_data:
-    device_id: {{ device_id }}
+    device_id: {{ i }}
 {% endfor %}
 
 action:
