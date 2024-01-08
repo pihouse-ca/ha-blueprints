@@ -39,7 +39,12 @@ variables:
   dimmer_press_type: {{ trigger.event.data.args.press_type }}
   dimmer_command: {{ trigger.event.data.command }}
   action_service: light.turn_{{ 'off' if trigger.event.data.args.button == 'off' else 'on' }}
-  action_transition: {{ 1 if trigger.event.data.args.button in [ 'off', 'on' ] else 0.5 }}
+  action_transition: >
+    {% if trigger.event.data.args.button in ['off','on'] %}
+      1
+    {% else %}
+      0.5
+    {% endif %}
   action_data_brightness_pct: {{ 100 if trigger.event.data.command == 'on_long_release' else None }}
   action_data_brightness_step_pct: >
     {% if trigger.event.data.args.button not in [ 'off', 'on' ] %}
