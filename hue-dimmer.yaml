@@ -37,7 +37,4 @@ trigger:
 variables:
   dimmer_switch_devices: !input dimmer_switches
 
-condition:
-  conditions: "{{ trigger.event.data.device_id in dimmer_switch_devices }}"
-
 action:
