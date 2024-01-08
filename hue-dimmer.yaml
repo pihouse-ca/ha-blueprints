@@ -36,5 +36,14 @@ trigger:
 
 variables:
   dimmer_switch_devices: !input dimmer_switches
+  dimmer_command: {{ trigger.event.data.command | split('_')[0] }}
 
 action:
+  - service: >
+      {% if trigger.event.data.command | split('_')[0] == "off" %}
+        light.turn_off
+      {% elseif %}
+        light.turn_on
+      {% endif %}
+    target: !input target_lights
+    
