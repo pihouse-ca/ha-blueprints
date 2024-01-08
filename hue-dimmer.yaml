@@ -3,9 +3,9 @@ blueprint:
   description: Configure Hue Dimmer Buttons
   domain: automation
   input:
-    dimmer_switch:
-      name: Dimmer Switch
-      description: Dimmer Switch to control
+    dimmer_switches:
+      name: Dimmer Switches
+      description: Dimmer Switches to configure
       selector:
         device:
           filter:
@@ -34,20 +34,20 @@ trigger:
 - platform: event
   event_type: zha_event
   event_data:
-    device_id: !input target_lights
+    device_id: !input dimmer_switches
     command: 'on'
   id: 'on'
 - platform: event
   event_type: zha_event
   event_data:
-    device_id: !input target_lights
+    device_id: !input dimmer_switches
     command: off_with_effect
   id: 'off'
 - platform: event
   event_type: zha_event
   id: 'up'
   event_data:
-    device_id: !input target_lights
+    device_id: !input dimmer_switches
     command: step
     args:
     - 0
@@ -57,7 +57,7 @@ trigger:
   event_type: zha_event
   id: 'down'
   event_data:
-    device_id: !input target_lights
+    device_id: !input dimmer_switches
     command: step
     args:
     - 1
