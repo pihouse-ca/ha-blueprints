@@ -18,8 +18,7 @@ blueprint:
       selector:
         target:
           entity:
-            filter:
-              - domain: light
+           domain: light
     light_profile:
       name: Light Profile
       description: Light Profile to set
