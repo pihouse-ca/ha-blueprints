@@ -5,3 +5,5 @@ blueprint:
 trigger:
   - platform: event
     event_type: zha_event
+
+action:
