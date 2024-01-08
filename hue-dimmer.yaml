@@ -11,7 +11,7 @@ blueprint:
           filter:
             - manufacturer: Phillips
             - model: RWL020
-        multiple: true
+          multiple: true
     target_lights:
       name: Lights
       description: Lights to control
