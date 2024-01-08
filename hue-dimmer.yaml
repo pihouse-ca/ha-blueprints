@@ -11,8 +11,6 @@ blueprint:
           filter:
             - manufacturer: Phillips
             - model: RWL020
-          entity:
-            - domain: button
         multiple: true
     target_lights:
       name: Lights
