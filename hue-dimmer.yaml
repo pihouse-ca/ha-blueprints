@@ -14,15 +14,18 @@ blueprint:
           entity:
             - domain: button
         multiple: true
-    target_button_on:
-      name: Target for On Button
-    target_button_off:
-      name: Target for Off Button
-    target_button_brighter:
-      name: Target for Brighter Button
-    target_button_dimmer:
-      name: Target for Dimmer Button
+    lights:
+      name: Lights
+      description: Lights to control
+      selector:
+        target:
+          entity:
+            filter:
+              - domain: light
 
 trigger:
+  - platform: event
+    event_type: zha_event
+
 
 action:
