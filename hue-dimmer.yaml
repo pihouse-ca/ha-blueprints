@@ -11,6 +11,8 @@ blueprint:
           filter:
             - manufacturer: Phillips
             - model: RWL020
+          entity:
+            - domain: button
           multiple: true
     target_lights:
       name: Lights
@@ -34,72 +36,34 @@ trigger:
 - platform: event
   event_type: zha_event
   event_data:
-    device_id: !input dimmer_switches
     command: 'on'
   id: 'on'
+  entity_id: !input dimmer_switches
 - platform: event
   event_type: zha_event
   event_data:
-    device_id: !input dimmer_switches
     command: off_with_effect
   id: 'off'
+  entity_id: !input dimmer_switches
 - platform: event
   event_type: zha_event
   id: 'up'
   event_data:
-    device_id: !input dimmer_switches
     command: step
     args:
     - 0
     - 30
     - 9
+  entity_id: !input dimmer_switches
 - platform: event
   event_type: zha_event
   id: 'down'
   event_data:
-    device_id: !input dimmer_switches
     command: step
     args:
     - 1
     - 30
     - 9
+  entity_id: !input dimmer_switches
 
 action:
-- choose:
-  - conditions:
-    - condition: trigger
-      id: 'on'
-    sequence:
-    - service: light.turn_on
-      target: !input target_lights
-      data:
-        profile: !input light_profile
-        transition: 1
-  - conditions:
-    - condition: trigger
-      id: 'off'
-    sequence:
-    - service: light.turn_off
-      target: !input target_lights
-      data:
-        transition: 1
-  - conditions:
-    - condition: trigger
-      id: 'down'
-    sequence:
-    - service: light.turn_on
-      target: !input target_lights
-      data:
-        profile: !input light_profile
-        brightness_step_pct: -5
-        transition: 0.5
-  - conditions:
-    - condition: trigger
-      id: 'up'
-    sequence:
-    - service: light.turn_on
-      target: !input target_lights
-      data:
-        profile: !input light_profile
-        brightness_step_pct: 5
-        transition: 0.5
